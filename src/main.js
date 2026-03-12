@@ -8,6 +8,7 @@ import { GPUContext } from './gpu/GPUContext.js';
 import { AudioManager } from './audio/AudioManager.js';
 import { Menu } from './menu/Menu.js';
 import { Game } from './game/Game.js';
+import { sleep } from './utils/utils.js';
 
 // ── App States ──────────────────────────────────────────────
 export const STATE = {
@@ -199,9 +200,7 @@ class CrispyBarnacle {
 }
 
 // ── Helpers ──────────────────────────────────────────────────
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 // ── Global keyboard handler ───────────────────────────────
 function setupGlobalInput(app) {

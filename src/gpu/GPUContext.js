@@ -27,20 +27,19 @@ export class GPUContext {
 
   // ── Initialize WebGPU ─────────────────────────────────────
   async init() {
-    this._setupCanvas();
-    await this._requestAdapter();
-    await this._requestDevice();
-    this._configureContext();
-    this._createOffscreenTexture();
-    this._createDepthTexture();
+  this._setupCanvas();
+  await this._requestAdapter();
+  await this._requestDevice();
+  this._configureContext();
+  this._createOffscreenTexture();
+  this._createDepthTexture();
 
-    console.log('[GPUContext] Initialized.', {
-      width:   this.width,
-      height:  this.height,
-      format:  this.format,
-      adapter: (await this.adapter.requestAdapterInfo()).description ?? 'unknown',
-    });
-  }
+  console.log('[GPUContext] Initialized.', {
+    width:  this.width,
+    height: this.height,
+    format: this.format,
+  });
+}
 
   // ── Canvas setup ─────────────────────────────────────────
   _setupCanvas() {

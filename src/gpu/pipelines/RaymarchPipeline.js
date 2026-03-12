@@ -153,8 +153,8 @@ export class RaymarchPipeline {
 
   // ── Rebuild bind group after resize ──────────────────────
   handleResize() {
-    _buildBindGroup();
-  }
+  this._buildBindGroup();
+}
 
   // ── Execute render pass ───────────────────────────────────
   render(encoder) {
