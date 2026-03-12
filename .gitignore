@@ -1,0 +1,197 @@
+# ============================================================
+# CRISPY BARNACLE — .gitignore
+# Security-hardened | YubiKey | Secrets | Environment
+# ============================================================
+
+# ============================================================
+# ENVIRONMENT & SECRETS
+# ============================================================
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.test
+*.env
+secrets/
+secrets.json
+secrets.yaml
+secrets.yml
+config/secrets.*
+credentials.json
+credentials.yaml
+credentials.yml
+
+# ============================================================
+# YUBIKEY & HARDWARE SECURITY KEYS
+# ============================================================
+*.pgp
+*.gpg
+*.asc
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+*.ca-bundle
+*.keystore
+*.jks
+yubikey/
+.yubikey/
+pgp-keys/
+gpg-keys/
+ssh-keys/
+*.ppk
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+id_ecdsa
+id_ecdsa.pub
+~/.gnupg/
+.gnupg/
+secring.gpg
+pubring.gpg
+pubring.kbx
+trustdb.gpg
+*.subkey
+*.revocation
+*.backup-key
+totp-seeds/
+otp-seeds/
+*.otp
+*.totp
+piv-keys/
+fido-credentials/
+*.fido
+u2f-keys/
+*.u2f
+
+# ============================================================
+# SSH & AUTHENTICATION
+# ============================================================
+.ssh/
+known_hosts
+authorized_keys
+*.pub
+ssh_config
+sshd_config
+ssh_host_*
+
+# ============================================================
+# API KEYS & TOKENS
+# ============================================================
+*.token
+*.apikey
+api-keys.json
+api_keys.json
+.api_keys
+tokens.json
+auth.json
+oauth.json
+service-account.json
+firebase-adminsdk*.json
+gcloud-credentials.json
+
+# ============================================================
+# NODE / JAVASCRIPT
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.yarn/
+.pnp/
+.pnp.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.node_repl_history
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.vite/
+.rollup.cache/
+
+# ============================================================
+# WASM / RUST
+# ============================================================
+target/
+wasm/pkg/
+wasm/target/
+*.wasm
+Cargo.lock
+**/*.rs.bk
+
+# ============================================================
+# OS FILES
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# ============================================================
+# VS CODE
+# ============================================================
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/*.log
+!.vscode/extensions.recommendations.json
+
+# ============================================================
+# LOGS & DIAGNOSTICS
+# ============================================================
+logs/
+*.log
+*.log.*
+*.logs
+crash-reports/
+*.stackdump
+*.heapsnapshot
+*.cpuprofile
+
+# ============================================================
+# AUDIO ASSETS (keep music out of git — use Git LFS instead)
+# ============================================================
+assets/music/*.mp3
+assets/music/*.wav
+assets/music/*.ogg
+assets/music/*.flac
+assets/music/*.aac
+
+# ============================================================
+# TEMPORARY & BUILD ARTIFACTS
+# ============================================================
+tmp/
+temp/
+.temp/
+.tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*~
+*.orig
+
+# ============================================================
+# TESTING & COVERAGE
+# ============================================================
+coverage/
+.nyc_output/
+*.lcov
+test-results/
+playwright-report/
