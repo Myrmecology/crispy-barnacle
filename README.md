@@ -103,7 +103,7 @@ The backend runs on port 8000. Keep this terminal open the entire session.
 1. Open `http://localhost:8080` in Chrome or Edge
 2. On the Tetris home screen click the **TEST** button
 3. You are now on the UX LAB hub page
-4. Click **Demo Site** — browse all three NovaTech pages naturally
+4. Click **Demo Site** — browse all three Justin UX LAB pages naturally
 5. Click around, scroll, fill out the contact form
 6. Return to the UX LAB hub and click **Dashboard**
 7. Select a page from the dropdown and click **Render Heatmap**
@@ -163,7 +163,7 @@ crispy-barnacle/
     │   └── models.py             # Pydantic request/response models
     ├── tracker/
     │   └── tracker.js            # Tracking snippet injected into demo site
-    ├── demo-site/                # NovaTech — the site being analyzed
+    ├── demo-site/                # Justin UX LAB — the site being analyzed
     │   ├── index.html            # Home page
     │   ├── about.html            # About page
     │   ├── contact.html          # Contact page (form + FAQ)

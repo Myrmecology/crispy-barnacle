@@ -8,7 +8,7 @@
  *   • Full session     (rrweb DOM recording)
  *
  * Batches are flushed to the FastAPI backend every 5 seconds.
- * The rrweb session is saved when the user leaves the page.
+ * Session is saved after 30 seconds and again on page exit.
  * ─────────────────────────────────────────────────────────────
  */
 
@@ -21,6 +21,7 @@
     flushInterval: 5000,       // ms between batch POSTs
     mouseSample:   50,         // ms between mousemove captures
     maxBatchSize:  200,        // flush early if batch grows large
+    sessionDelay:  30000,      // guaranteed session save after 30s
   };
 
   // ── Session identity ─────────────────────────────────────────
@@ -29,9 +30,10 @@
   const START_TIME = Date.now();
 
   // ── Event buffer ─────────────────────────────────────────────
-  let _buffer      = [];
-  let _rrwebEvents = [];
-  let _lastMouse   = 0;
+  let _buffer       = [];
+  let _rrwebEvents  = [];
+  let _lastMouse    = 0;
+  let _sessionSaved = false;
 
   // ────────────────────────────────────────────────────────────
   //  SESSION ID
@@ -49,7 +51,7 @@
   // ────────────────────────────────────────────────────────────
   //  PAGE KEY
   //  Converts a URL path into a clean slug
-  //  e.g. "/demo-site/about.html" → "about"
+  //  e.g. "/demo-site/about.html" → "ux-lab-demo-site-about"
   // ────────────────────────────────────────────────────────────
 
   function _slugify(path) {
@@ -106,17 +108,21 @@
         body:    JSON.stringify(payload),
       });
     } catch (err) {
-      // Backend offline — silently drop, never alert the user
       console.debug('[UX LAB] Backend unreachable, events dropped.');
     }
   }
 
   // ────────────────────────────────────────────────────────────
-  //  SAVE SESSION  — called on page unload
+  //  SAVE SESSION
+  //  Called after 30 seconds AND on page exit.
+  //  The _sessionSaved flag prevents duplicate saves.
   // ────────────────────────────────────────────────────────────
 
   async function _saveSession() {
-    if (_rrwebEvents.length === 0) return;
+    if (_sessionSaved)                  return;
+    if (Date.now() - START_TIME < 3000) return;
+
+    _sessionSaved = true;
 
     const payload = {
       page_key:     PAGE_KEY,
@@ -127,11 +133,16 @@
       screen_h:     screen.height,
     };
 
-    // Use sendBeacon for reliability on page close
-    const blob = new Blob([JSON.stringify(payload)], {
-      type: 'application/json'
-    });
-    navigator.sendBeacon(`${CONFIG.apiBase}/sessions`, blob);
+    try {
+      await fetch(`${CONFIG.apiBase}/sessions`, {
+        method:    'POST',
+        headers:   { 'Content-Type': 'application/json' },
+        body:      JSON.stringify(payload),
+      });
+      console.debug('[UX LAB] Session saved →', PAGE_KEY);
+    } catch (err) {
+      console.debug('[UX LAB] Session save failed:', err);
+    }
   }
 
   // ────────────────────────────────────────────────────────────
@@ -188,22 +199,37 @@
   _startRrweb();
 
   // ────────────────────────────────────────────────────────────
-  //  FLUSH TIMER  — every 5 seconds
+  //  FLUSH TIMER — every 5 seconds
   // ────────────────────────────────────────────────────────────
 
   setInterval(_flush, CONFIG.flushInterval);
 
   // ────────────────────────────────────────────────────────────
-  //  PAGE UNLOAD  — flush remaining events + save session
+  //  GUARANTEED SESSION SAVE — fires after 30 seconds
+  //  This is the primary save mechanism. Ensures a session
+  //  is always recorded regardless of how the user exits.
   // ────────────────────────────────────────────────────────────
+
+  setTimeout(async () => {
+    await _flush();
+    await _saveSession();
+  }, CONFIG.sessionDelay);
+
+  // ────────────────────────────────────────────────────────────
+  //  PAGE UNLOAD — backup save on exit
+  //  Catches users who leave before the 30 second timer fires.
+  // ────────────────────────────────────────────────────────────
+
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'hidden') {
+      await _flush();
+      await _saveSession();
+    }
+  });
 
   window.addEventListener('pagehide', async () => {
     await _flush();
     await _saveSession();
-  });
-
-  window.addEventListener('beforeunload', async () => {
-    await _flush();
   });
 
   // ────────────────────────────────────────────────────────────

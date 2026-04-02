@@ -1,7 +1,7 @@
 /**
  * UX LAB — Demo Site / main.js
  * ─────────────────────────────────────────────────────────────
- * Handles all interactive behavior on the NovaTech demo site.
+ * Handles all interactive behavior on the Justin UX LAB demo site.
  * Runs on all three pages: Home, About, Contact.
  * tracker.js handles all the silent data capture separately.
  * ─────────────────────────────────────────────────────────────
@@ -133,6 +133,6 @@
     });
   }
 
-  console.debug('[NovaTech] main.js loaded — UX LAB tracker active');
+  console.debug('[Justin UX LAB] main.js loaded — UX LAB tracker active');
 
 })();
