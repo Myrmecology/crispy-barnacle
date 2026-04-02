@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UX LAB — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/dashboard.css">
+</head>
+<body>
+
+  <!-- ── Corner decorations ── -->
+  <div class="corner corner--tl"></div>
+  <div class="corner corner--tr"></div>
+  <div class="corner corner--bl"></div>
+  <div class="corner corner--br"></div>
+
+  <!-- ── Top Bar ── -->
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="topbar__logo">UX<span>LAB</span></span>
+      <span class="topbar__sep">/</span>
+      <span class="topbar__page">Analytics Dashboard</span>
+    </div>
+    <div class="topbar__right">
+      <div class="topbar__status" id="backendStatus">
+        <span class="topbar__dot"></span>
+        <span class="topbar__status-text">Connecting...</span>
+      </div>
+      <a href="../index.html" class="topbar__back">← UX Lab Home</a>
+      <a href="../../index.html" class="topbar__game">⬡ Return to Game</a>
+    </div>
+  </header>
+
+  <!-- ── Main Layout ── -->
+  <div class="layout">
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+
+      <div class="sidebar__section">
+        <p class="sidebar__label">// View Mode</p>
+        <div class="tab-group">
+          <button class="tab-btn active" data-tab="heatmap">Heatmap</button>
+          <button class="tab-btn" data-tab="replay">Session Replay</button>
+        </div>
+      </div>
+
+      <div class="sidebar__section">
+        <p class="sidebar__label">// Page</p>
+        <select class="sidebar__select" id="pageSelect">
+          <option value="">Loading pages...</option>
+        </select>
+      </div>
+
+      <div class="sidebar__section" id="heatmapControls">
+        <p class="sidebar__label">// Heatmap Layer</p>
+        <div class="toggle-group">
+          <label class="toggle">
+            <input type="checkbox" id="showClicks" checked />
+            <span class="toggle__track"></span>
+            <span class="toggle__label">Clicks</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="showMoves" checked />
+            <span class="toggle__track"></span>
+            <span class="toggle__label">Mouse Movement</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="showScroll" />
+            <span class="toggle__track"></span>
+            <span class="toggle__label">Scroll Depth</span>
+          </label>
+        </div>
+
+        <div class="sidebar__section" style="padding:0; border:none; margin-top:20px;">
+          <p class="sidebar__label">// Intensity</p>
+          <input type="range" class="sidebar__range" id="intensityRange"
+                 min="5" max="40" value="18" />
+          <div class="sidebar__range-labels">
+            <span>Subtle</span><span>Intense</span>
+          </div>
+        </div>
+
+        <button class="sidebar__btn" id="loadHeatmapBtn">
+          ◈ Render Heatmap
+        </button>
+      </div>
+
+      <div class="sidebar__section" id="replayControls" style="display:none;">
+        <p class="sidebar__label">// Sessions</p>
+        <div class="session-list" id="sessionList">
+          <p class="session-list__empty">No sessions recorded yet.<br/>Browse the demo site first.</p>
+        </div>
+      </div>
+
+      <div class="sidebar__section">
+        <p class="sidebar__label">// Live Stats</p>
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-box__value" id="totalEvents">—</span>
+            <span class="stat-box__label">Events</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-box__value" id="totalSessions">—</span>
+            <span class="stat-box__label">Sessions</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-box__value" id="totalPages">—</span>
+            <span class="stat-box__label">Pages</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-box__value" id="totalClicks">—</span>
+            <span class="stat-box__label">Clicks</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── Main Panel ── -->
+    <main class="main">
+
+      <!-- Heatmap View -->
+      <div id="heatmapView" class="view">
+        <div class="view__header">
+          <h2 class="view__title">Heatmap Overlay</h2>
+          <p class="view__sub" id="heatmapMeta">Select a page and click Render Heatmap</p>
+        </div>
+
+        <div class="canvas-wrap" id="canvasWrap">
+          <div class="canvas-placeholder" id="canvasPlaceholder">
+            <div class="canvas-placeholder__icon">◈</div>
+            <p>No heatmap data yet</p>
+            <p class="canvas-placeholder__sub">
+              Browse the NovaTech demo site,<br/>
+              then return here and click Render Heatmap.
+            </p>
+            <a href="../demo-site/index.html" class="canvas-placeholder__link" target="_blank">
+              Open Demo Site →
+            </a>
+          </div>
+          <canvas id="heatmapCanvas"></canvas>
+        </div>
+
+        <!-- Scroll depth bar -->
+        <div class="scroll-depth" id="scrollDepth" style="display:none;">
+          <p class="sidebar__label" style="margin-bottom:12px;">// Scroll Depth Distribution</p>
+          <div class="scroll-depth__bar">
+            <div class="scroll-depth__fill" id="scrollFill"></div>
+          </div>
+          <div class="scroll-depth__labels">
+            <span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Replay View -->
+      <div id="replayView" class="view" style="display:none;">
+        <div class="view__header">
+          <h2 class="view__title">Session Replay</h2>
+          <p class="view__sub" id="replayMeta">Select a session from the sidebar</p>
+        </div>
+
+        <div class="replay-wrap" id="replayWrap">
+          <div class="canvas-placeholder" id="replayPlaceholder">
+            <div class="canvas-placeholder__icon">▶</div>
+            <p>No session selected</p>
+            <p class="canvas-placeholder__sub">
+              Browse the demo site to record a session,<br/>
+              then select it from the sidebar to replay.
+            </p>
+          </div>
+          <div id="replayPlayer" style="display:none;"></div>
+        </div>
+
+        <!-- Replay controls -->
+        <div class="replay-controls" id="replayControlBar" style="display:none;">
+          <button class="replay-btn" id="replayPlayBtn">▶ Play</button>
+          <div class="replay-progress">
+            <div class="replay-progress__fill" id="replayProgressFill"></div>
+          </div>
+          <span class="replay-time" id="replayTime">0:00</span>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/rrweb@latest/dist/rrweb.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/rrweb-player@latest/dist/index.js"></script>
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rrweb-player@latest/dist/style.css"/>
+  <script src="./js/heatmap.js"></script>
+  <script src="./js/replay.js"></script>
+  <script src="./js/app.js"></script>
+
+</body>
+</html>

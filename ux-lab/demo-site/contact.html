@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NovaTech — Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+  <style>
+    /* ── Contact page specific styles ── */
+    .contact {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .contact { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .contact__left { position: sticky; top: 100px; }
+
+    .contact__title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .contact__title span { color: var(--accent); }
+
+    .contact__desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 40px;
+    }
+
+    .contact__info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .contact__info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .contact__info-icon {
+      font-size: 1.1rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .contact__info-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .contact__info-value {
+      font-size: 0.9rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    /* ── Form ── */
+    .contact__form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      box-shadow: var(--shadow);
+    }
+
+    .form__title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    .form__group {
+      margin-bottom: 20px;
+    }
+
+    .form__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .form__label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    .form__input,
+    .form__select,
+    .form__textarea {
+      width: 100%;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+    }
+
+    .form__input:focus,
+    .form__select:focus,
+    .form__textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,70,229,0.12);
+    }
+
+    .form__input::placeholder,
+    .form__textarea::placeholder { color: #b0bac8; }
+
+    .form__textarea {
+      resize: vertical;
+      min-height: 130px;
+      line-height: 1.6;
+    }
+
+    .form__select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a99' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+
+    .form__check {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .form__check input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .form__check label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      cursor: pointer;
+    }
+
+    .form__check label a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .form__submit {
+      width: 100%;
+      padding: 15px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(79,70,229,0.3);
+    }
+
+    .form__submit:hover {
+      background: var(--accent-h);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(79,70,229,0.4);
+    }
+
+    .form__submit:active { transform: translateY(0); }
+
+    /* ── Success state ── */
+    .form__success {
+      display: none;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .form__success-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .form__success h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .form__success p {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    /* ── FAQ ── */
+    .faq {
+      max-width: 720px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+    }
+
+    .faq__title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .faq__item {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+      cursor: pointer;
+    }
+
+    .faq__item:last-child { border-bottom: 1px solid var(--border); }
+
+    .faq__question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      gap: 16px;
+    }
+
+    .faq__toggle {
+      font-size: 1.2rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      transition: transform 0.3s;
+      line-height: 1;
+    }
+
+    .faq__item.open .faq__toggle { transform: rotate(45deg); }
+
+    .faq__answer {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+    }
+
+    .faq__item.open .faq__answer {
+      max-height: 200px;
+      padding-top: 14px;
+    }
+
+    /* ── About page mission section ── */
+    .mission {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px;
+    }
+
+    .mission__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .mission__inner { grid-template-columns: 1fr; gap: 48px; }
+    }
+
+    .mission__title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .mission__body {
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+
+    .mission__stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .mission__stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+    }
+
+    .mission__stat-value {
+      display: block;
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .mission__stat-label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    /* ── Values ── */
+    .values {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .values__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      text-align: left;
+    }
+
+    .value-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .value-card__num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--accent-lt);
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .value-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .value-card p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── Team ── */
+    .team {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .team__grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+
+    .team-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 24px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .team-card__avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .team-card__name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .team-card__role {
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .team-card__bio {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Navigation ── -->
+  <nav class="nav">
+    <div class="nav__brand">NOVA<span>TECH</span></div>
+    <ul class="nav__links">
+      <li><a href="./index.html">Home</a></li>
+      <li><a href="./about.html">About</a></li>
+      <li><a href="./contact.html" class="active">Contact</a></li>
+    </ul>
+    <a href="./contact.html" class="nav__cta">Get Started</a>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section class="hero hero--inner">
+    <div class="hero__badge">// Get In Touch</div>
+    <h1 class="hero__title">
+      Let's start a<br/>
+      <span>conversation.</span>
+    </h1>
+    <p class="hero__sub">
+      Whether you have a question, want a demo, or just want
+      to say hello — we'd love to hear from you.
+    </p>
+  </section>
+
+  <!-- ── Contact Layout ── -->
+  <div class="contact">
+
+    <!-- Left: Info -->
+    <div class="contact__left">
+      <h2 class="contact__title">
+        We're here<br/>to <span>help.</span>
+      </h2>
+      <p class="contact__desc">
+        Our team typically responds within one business day.
+        For urgent issues, use the live chat in the bottom
+        right corner of your dashboard.
+      </p>
+
+      <div class="contact__info">
+        <div class="contact__info-item">
+          <span class="contact__info-icon">◈</span>
+          <div>
+            <p class="contact__info-label">Email</p>
+            <p class="contact__info-value">hello@novatech.io</p>
+          </div>
+        </div>
+        <div class="contact__info-item">
+          <span class="contact__info-icon">◉</span>
+          <div>
+            <p class="contact__info-label">Office</p>
+            <p class="contact__info-value">San Francisco, CA</p>
+          </div>
+        </div>
+        <div class="contact__info-item">
+          <span class="contact__info-icon">⬡</span>
+          <div>
+            <p class="contact__info-label">Response Time</p>
+            <p class="contact__info-value">Within 1 business day</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="contact__form">
+      <h3 class="form__title">Send us a message</h3>
+
+      <div id="formBody">
+        <div class="form__row">
+          <div>
+            <label class="form__label" for="fname">First Name</label>
+            <input class="form__input" type="text" id="fname" placeholder="Jordan" />
+          </div>
+          <div>
+            <label class="form__label" for="lname">Last Name</label>
+            <input class="form__input" type="text" id="lname" placeholder="Lee" />
+          </div>
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="email">Work Email</label>
+          <input class="form__input" type="email" id="email" placeholder="jordan@company.com" />
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="company">Company</label>
+          <input class="form__input" type="text" id="company" placeholder="Acme Corp" />
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="reason">Reason for Contact</label>
+          <select class="form__select" id="reason">
+            <option value="">Select a reason...</option>
+            <option>Request a Demo</option>
+            <option>Sales Inquiry</option>
+            <option>Technical Support</option>
+            <option>Partnership</option>
+            <option>General Question</option>
+          </select>
+        </div>
+
+        <div class="form__group">
+          <label class="form__label" for="message">Message</label>
+          <textarea class="form__textarea" id="message"
+            placeholder="Tell us what you're working on..."></textarea>
+        </div>
+
+        <div class="form__check">
+          <input type="checkbox" id="privacy" />
+          <label for="privacy">
+            I agree to the <a href="#">Privacy Policy</a> and consent
+            to NovaTech storing my information to respond to my inquiry.
+          </label>
+        </div>
+
+        <button class="form__submit" onclick="handleSubmit()">
+          Send Message →
+        </button>
+      </div>
+
+      <!-- Success State -->
+      <div class="form__success" id="formSuccess">
+        <span class="form__success-icon">✦</span>
+        <h3>Message sent!</h3>
+        <p>We'll get back to you within one business day.<br/>Thanks for reaching out.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── FAQ ── -->
+  <section class="faq">
+    <h2 class="faq__title">Frequently asked questions</h2>
+
+    <div class="faq__item" onclick="toggleFaq(this)">
+      <div class="faq__question">
+        Is there a free trial?
+        <span class="faq__toggle">+</span>
+      </div>
+      <div class="faq__answer">
+        Yes — all plans include a 14-day free trial with no credit card required.
+        You get full access to every feature during the trial period.
+      </div>
+    </div>
+
+    <div class="faq__item" onclick="toggleFaq(this)">
+      <div class="faq__question">
+        How does pricing work?
+        <span class="faq__toggle">+</span>
+      </div>
+      <div class="faq__answer">
+        We charge per seat, per month. Starter plans begin at $29/seat.
+        Enterprise pricing is custom — reach out to our sales team for a quote.
+      </div>
+    </div>
+
+    <div class="faq__item" onclick="toggleFaq(this)">
+      <div class="faq__question">
+        Can I self-host NovaTech?
+        <span class="faq__toggle">+</span>
+      </div>
+      <div class="faq__answer">
+        Self-hosted deployments are available on our Enterprise plan.
+        We provide full Docker images and support for on-premise installations.
+      </div>
+    </div>
+
+    <div class="faq__item" onclick="toggleFaq(this)">
+      <div class="faq__question">
+        What integrations are supported?
+        <span class="faq__toggle">+</span>
+      </div>
+      <div class="faq__answer">
+        NovaTech integrates with Slack, GitHub, Jira, Linear, Zapier,
+        and over 200 other tools via our REST API and native connectors.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer class="footer">
+    <div class="footer__brand">NOVA<span>TECH</span></div>
+    <p class="footer__copy">© 2026 NovaTech Inc. · Built for the demo · UX LAB tracking active</p>
+    <a href="../index.html" class="footer__return">← Back to UX Lab</a>
+  </footer>
+
+  <!-- ── Tracking ── -->
+  <script src="https://cdn.jsdelivr.net/npm/rrweb@latest/dist/rrweb.min.js"></script>
+  <script src="../tracker/tracker.js"></script>
+
+  <script>
+    function handleSubmit() {
+      document.getElementById('formBody').style.display    = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    }
+
+    function toggleFaq(item) {
+      item.classList.toggle('open');
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/rrweb@latest/dist/rrweb.min.js"></script>
+  <script src="../tracker/tracker.js"></script>
+  <script src="./js/main.js"></script>
+
+
+</body>
+</html>
