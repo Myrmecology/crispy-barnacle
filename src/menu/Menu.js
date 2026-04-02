@@ -78,6 +78,10 @@ export class Menu {
             <span class="btn-icon">⚙</span>
             <span class="btn-label">SETTINGS</span>
           </button>
+          <button class="menu-btn" id="btn-test"     data-action="test">
+            <span class="btn-icon">⚗</span>
+            <span class="btn-label">TEST</span>
+          </button>
           <button class="menu-btn" id="btn-quit"     data-action="quit">
             <span class="btn-icon">✕</span>
             <span class="btn-label">QUIT</span>
@@ -379,6 +383,12 @@ export class Menu {
     this.el.querySelector('#btn-close-settings').addEventListener('click', () => {
       this.audio.playMenuClick();
       this._hideSettings();
+    });
+
+    // Test lab
+    this.el.querySelector('#btn-test').addEventListener('click', () => {
+      this.audio.playMenuClick();
+      window.location.href = './ux-lab/index.html';
     });
 
     // Quit

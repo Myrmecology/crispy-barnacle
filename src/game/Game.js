@@ -289,7 +289,7 @@ export class Game {
     ctx.clearRect(0, 0, W, H);
 
     // Background — semi-transparent so fractal bleeds through
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.72)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
     ctx.fillRect(0, 0, W, H);
 
     // Grid lines

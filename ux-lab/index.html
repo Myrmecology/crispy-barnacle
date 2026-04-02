@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UX LAB — Behavioral Analytics Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --acid:    #00ffe7;
+      --acid2:   #ff00aa;
+      --bg:      #050810;
+      --panel:   #0a0f1e;
+      --border:  #1a2540;
+      --text:    #c8d8f0;
+      --dim:     #4a5a7a;
+      --danger:  #ff3a6e;
+      --safe:    #00ff99;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated grid background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,231,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,231,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridScroll 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Scanline overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    @keyframes gridScroll {
+      0%   { background-position: 0 0, 0 0; }
+      100% { background-position: 0 40px, 40px 0; }
+    }
+
+    /* ── Corner decoration ── */
+    .corner {
+      position: fixed;
+      width: 60px; height: 60px;
+      border-color: var(--acid);
+      border-style: solid;
+      opacity: 0.4;
+      z-index: 10;
+    }
+    .corner--tl { top: 16px; left: 16px;  border-width: 2px 0 0 2px; }
+    .corner--tr { top: 16px; right: 16px; border-width: 2px 2px 0 0; }
+    .corner--bl { bottom: 16px; left: 16px;  border-width: 0 0 2px 2px; }
+    .corner--br { bottom: 16px; right: 16px; border-width: 0 2px 2px 0; }
+
+    /* ── Layout ── */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      gap: 48px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .header__eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.35em;
+      color: var(--acid);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+
+    .header__title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      background: linear-gradient(135deg, #ffffff 0%, var(--acid) 60%, var(--acid2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    .header__sub {
+      font-size: 0.8rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    /* ── Status bar ── */
+    .statusbar {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeDown 0.8s 0.2s ease both;
+    }
+
+    .status-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-item__value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--acid);
+      text-shadow: 0 0 20px rgba(0,255,231,0.5);
+    }
+
+    .status-item__label {
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    .status-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 32px 28px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.3s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--card-accent, var(--acid)) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--card-accent, var(--acid));
+      transform: translateY(-4px);
+    }
+
+    .card:hover::before { opacity: 0.04; }
+
+    .card--demo  { --card-accent: var(--acid); }
+    .card--dash  { --card-accent: var(--acid2); }
+    .card--about { --card-accent: #7b61ff; }
+
+    .card__tag {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--card-accent, var(--acid));
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card__tag::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--card-accent, var(--acid));
+      box-shadow: 0 0 8px var(--card-accent, var(--acid));
+      animation: pulse 2s infinite;
+    }
+
+    .card__title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .card__desc {
+      font-size: 0.75rem;
+      line-height: 1.7;
+      color: var(--dim);
+    }
+
+    .card__arrow {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      font-size: 1.1rem;
+      color: var(--card-accent, var(--acid));
+      opacity: 0;
+      transform: translateX(-8px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .card:hover .card__arrow {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ── Return button ── */
+    .return-btn {
+      animation: fadeUp 0.8s 0.6s ease both;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.3s, color 0.3s, box-shadow 0.3s;
+      display: inline-block;
+    }
+
+    .return-btn:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+      box-shadow: 0 0 20px rgba(255,58,110,0.2);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      font-size: 0.62rem;
+      color: var(--border);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: fadeUp 0.8s 0.7s ease both;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="corner corner--tl"></div>
+  <div class="corner corner--tr"></div>
+  <div class="corner corner--bl"></div>
+  <div class="corner corner--br"></div>
+
+  <div class="wrapper">
+
+    <header class="header">
+      <p class="header__eyebrow">// Behavioral Analytics Platform v1.0</p>
+      <h1 class="header__title">UX LAB</h1>
+      <p class="header__sub">Mouse Tracking &nbsp;·&nbsp; Heatmaps &nbsp;·&nbsp; Session Replay</p>
+    </header>
+
+    <div class="statusbar">
+      <div class="status-item">
+        <span class="status-item__value" id="stat-sessions">0</span>
+        <span class="status-item__label">Sessions Recorded</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-item__value" id="stat-events">0</span>
+        <span class="status-item__label">Events Captured</span>
+      </div>
+      <div class="status-divider"></div>
+      <div class="status-item">
+        <span class="status-item__value" id="stat-status">LIVE</span>
+        <span class="status-item__label">System Status</span>
+      </div>
+    </div>
+
+    <div class="cards">
+
+      <a href="./demo-site/index.html" class="card card--demo">
+        <p class="card__tag">Entry Point</p>
+        <h2 class="card__title">Demo Site</h2>
+        <p class="card__desc">
+          A multi-page test environment. Browse it normally — every click,
+          scroll, and mouse movement is silently captured and sent to the backend.
+        </p>
+        <span class="card__arrow">→</span>
+      </a>
+
+      <a href="./dashboard/index.html" class="card card--dash">
+        <p class="card__tag">Analytics</p>
+        <h2 class="card__title">Dashboard</h2>
+        <p class="card__desc">
+          View live heatmaps, click overlays, scroll depth maps,
+          and replay full recorded sessions frame by frame.
+        </p>
+        <span class="card__arrow">→</span>
+      </a>
+
+      <div class="card card--about" style="cursor:default;">
+        <p class="card__tag">How It Works</p>
+        <h2 class="card__title">Architecture</h2>
+        <p class="card__desc">
+          tracker.js → FastAPI backend → SQLite.
+          Zero third-party analytics. Built from scratch
+          to mirror how Hotjar and FullStory capture behavior.
+        </p>
+      </div>
+
+    </div>
+
+    <a href="../index.html" class="return-btn">← Return to Game</a>
+
+    <p class="footer">// Built from scratch · No third-party analytics · 2026</p>
+
+  </div>
+
+  <script>
+    // Animate stat counters on load
+    function animateCount(el, target, duration, prefix = '') {
+      let start = 0;
+      const step = target / (duration / 16);
+      const timer = setInterval(() => {
+        start += step;
+        if (start >= target) { el.textContent = prefix + target; clearInterval(timer); return; }
+        el.textContent = prefix + Math.floor(start);
+      }, 16);
+    }
+
+    window.addEventListener('load', () => {
+      // These will update from the real backend once sessions are recorded
+      // For now they animate to 0 — they'll be live once tracker.js is running
+      animateCount(document.getElementById('stat-sessions'), 0, 800);
+      animateCount(document.getElementById('stat-events'),   0, 800);
+
+      // Ping backend to check if it's alive
+      fetch('http://localhost:8000/status')
+        .then(r => r.json())
+        .then(d => {
+          document.getElementById('stat-sessions').textContent = d.sessions ?? 0;
+          document.getElementById('stat-events').textContent   = d.events   ?? 0;
+        })
+        .catch(() => {
+          document.getElementById('stat-status').textContent = 'OFFLINE';
+          document.getElementById('stat-status').style.color = 'var(--danger)';
+        });
+    });
+  </script>
+
+</body>
+</html>
