@@ -1,4 +1,5 @@
 # CRISPY BARNACLE
+# FOR A VIDEO DEMO OF THIS PROJECT, PLEASE VISIT: https://www.youtube.com/watch?v=OiW6nNKO90s
 
 A two-project creative portfolio living in one repo.
 
